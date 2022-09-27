@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+# this file tries to : 1. close docker 2. updat model 3. run docker again
+
+now=$(date)
+# echo "pipeline_cron: 1. close docker at $now"
+cd 
+cd /home/team17/group-project-s22-the-avengers/docker/
+echo "sudo docker ps"
+sudo docker ps
+echo "sudo docker ps -a"
+sudo docker ps -a
+
+sudo docker-compose stop
+
+# give permission for trained model to be written
+cd /home/team17/group-project-s22-the-avengers/docker/app/
+sudo chmod a+x+r+w data/trained_model 
+
+echo "pipeline_cron: 2.1 run get_data." #to get more recent movie data and user data
+sudo -u team17 python3 kafka-consumer/get_data.py
+echo "pipeline_cron: 2.2 run pipeline at $now" # to re train the model.
+sudo -u team17 python3 pipeline.py
+
+echo "pipeline_cron: 3. run docker compose at $now"
+cd /home/team17/group-project-s22-the-avengers/docker/
+sudo docker-compose build
+echo "docker composed up at $now"
+now=$(date)
+
+echo "3 sudo docker ps"
+sudo docker ps
+echo "3 sudo docker ps -a"
+sudo docker ps -a
+
+echo "git_cron: 4.git cron at $now. "
+cd /home/team17/group-project-s22-the-avengers/
+sudo -u team17 git checkout MASTER
+sudo -u team17 git pull
+sudo -u team17 git add docker/app/data/provenance.txt
+sudo -u team17 git commit -m "new cron job update on model (provenance.txt)"
+sudo -u team17 git push
+now=$(date)
+echo "git_cron: 4. finished runned at $now"
+
+echo "pipeline_cron: 5. run docker-compose up at $now. "
+cd /home/team17/group-project-s22-the-avengers/docker/
+sudo docker-compose up
+echo "4 sudo docker ps"
+sudo docker ps
+echo "4 sudo docker ps -a"
+sudo docker ps -a  
+

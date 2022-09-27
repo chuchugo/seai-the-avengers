@@ -1,0 +1,122 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                echo 'Starting code checkout stage.'
+                sh '''
+                    #!/bin/sh
+                    rm -rf
+                '''
+                git credentialsId: '96d6b1c4-7c33-459a-bb9f-2eacb44a43fd', url: 'https://github.com/cmu-seai/group-project-s22-the-avengers.git'
+                echo 'Code checked out successfully.'
+            } // steps
+        } // stage
+
+        stage('Install Dependencies') {
+           steps {
+               echo 'Installing dependencies'
+                sh '''
+                    #!/bin/sh
+                    pip3 install -r requirements.txt
+                    python3 -m spacy download en_core_web_sm
+                '''
+            } // steps
+        } // stage
+        stage('Test content based model training') {
+           steps {
+               echo 'test content based model training'
+                sh '''
+                    #!/bin/sh
+                    python3 content_based_model/test_content_based_training.py
+                '''
+            } // steps
+        } // stage
+
+        stage('Test content based model predictions') {
+           steps {
+               echo 'test content based model predictions'
+                sh '''
+                    #!/bin/sh
+                    python3 content_based_model/test_content_based_testing.py
+                '''
+            } // steps
+        } // stage
+
+        stage('Test offline model test') {
+           steps {
+               echo 'test offline model'
+                sh '''
+                    #!/bin/sh
+                     python3 accuracy_measure/test_get_accuracy.py
+                '''
+            } // steps
+        } // stage
+
+        stage('Test flask server') {
+           steps {
+               echo 'test flask server'
+                sh '''
+                    #!/bin/sh
+                     python3 server/test_flask_server.py
+                '''
+            } // steps
+        } // stage
+
+        stage('Test get online test data') {
+           steps {
+               echo 'test online test data'
+                sh '''
+                    #!/bin/sh
+                    python3 kafka-consumer/test_get_online_test_data.py
+                '''
+            } // steps
+        } // stage
+
+       stage('Test get online model matrix') {
+           steps {
+               echo 'test get online model matrix'
+                sh '''
+                    #!/bin/sh
+                     python3 online_model_quality/model_quality_matrix.py
+                '''
+            } // steps
+        } // stage
+
+        stage('Test get online model accuracy testing') {
+           steps {
+               echo 'test get online model accuracy testing'
+                sh '''
+                    #!/bin/sh
+                     python3 online_model_quality/test_model_quality_matrix.py
+                '''
+            } // steps
+        } // stage
+        stage('Evaluate Code Quality ') {
+            // cobertura coberturaReportFile: 'path-to/coverage.xml'
+           steps {
+            	echo 'Run code quality tests'
+                sh '''
+                    #!/bin/sh
+                    python3 -m pytest --cov=./ --cov-report=xml ./
+                '''
+                cobertura coberturaReportFile: 'coverage.xml'
+                echo 'Code quality check completed.'
+            } // steps
+        } // stage
+
+        stage('Run Pipeline') {
+           steps {
+               echo 'Run Pipeline'
+                sh '''
+                    #!/bin/sh
+                    python3 pipeline.py
+                '''
+                echo 'pipeline run complete'
+            } // steps
+        } // stage
+
+    } // stages  
+} // pipeline

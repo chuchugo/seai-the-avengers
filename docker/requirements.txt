@@ -1,0 +1,11 @@
+click==8.0
+coverage==6.3.2
+flask==2.1.0
+kafka-python==2.0.2
+pandas==1.4.1
+pytest==7.0.1
+pytest-cov==3.0.0
+scikit-learn==1.0.2
+scipy==1.8.0
+spacy==3.2.3
+requests==2.27.1

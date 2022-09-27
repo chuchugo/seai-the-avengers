@@ -1,0 +1,34 @@
+groups:
+  - name: InstanceDown
+    rules:
+      - alert: InstanceDown 
+        expr: up{job="services"} < 1 
+        for: 1m
+          severity: high
+
+  - name: HighRequestLatency
+    rules:
+    - alert: HighRequestLatency
+      expr: job:request_latency_seconds:mean5m{job="request_latency"} > 0.5
+      for: 10m
+        # severity: page
+      annotations:
+        summary: High request latency
+
+  - name: LowRequestCount
+    rules:
+    - alert: LowRequestCount
+      expr: job:request_count:mean5m{job="request_count"} < 10
+      for: 5m
+        severity: high
+      annotations:
+        summary: Low request count
+
+  - name: LowStatus200
+    rules:
+    - alert: LowStatus200
+      expr: job:request_status_200_ratio:mean5m{job="status_200"} < 10
+      for: 10m
+        severity: page
+      annotations:
+        summary: Low status 200

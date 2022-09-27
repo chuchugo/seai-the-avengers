@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+cd 
+cd /home/team17/group-project-s22-the-avengers/
+
+now=$(date)
+echo "git_cron: 1. started runned at $now"
+
+sudo -u team17 git pull
+git add docker/app/data/provenance.txt
+git commit -m "new cron job update on model(provenance.txt) at $now"
+
+now=$(date)
+
+echo "git_cron: 2. finished runned at $now"  
+

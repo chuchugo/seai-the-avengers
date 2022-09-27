@@ -1,0 +1,12 @@
+content_
+milestone2_saved_model2
+saved_model_combined.pkl
+2_saved_model_m1
+trained_model
+*__pycache__*
+.DS_Store
+movie_data_combined.csv
+preprocessed_data.csv
+watched_combined.csv
+grafana-enterprise_8.4.6_amd64.deb
+alertmanager-0.22.2.linux-amd64.tar.gz

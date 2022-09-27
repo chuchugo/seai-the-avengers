@@ -1,0 +1,19 @@
+Machine name: 17645-team17.isri.cmu.edu
+IP Address: 128.2.205.118
+Operating System: Ubuntu Desktop 20.04.3 LTS
+This VM has 4 CPUs, 16gb of ram and 200gb of disk space
+
+SSH Tunneling
+-- SERVER --
+ssh -L 9092:localhost:9092 tunnel@128.2.204.215 -NTf
+password: seaitunnel
+
+-- LOCAL --
+ssh -L 9092:localhost:9092 smoghe@128.2.205.118 -NTf
+password: ISR17645#smoghe
+
+kafkacat -b localhost -L
+
+kafkacat -b localhost -t movielog17 -C
+
+kafkacat -b localhost -t movielog17 -C -o beginning

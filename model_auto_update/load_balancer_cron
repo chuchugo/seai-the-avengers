@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+now=$(date)
+
+echo "load_balancer_cron: 1. run load balancer at $now"
+cd 
+cd /home/team17/group-project-s22-the-avengers/load_balancer
+sudo -u team17 python3 load_balancer.py
+
+now=$(date)
+echo "load_balancer_cron:  1. load balancer ended at $now"
+
+echo "load_balancer_cron:  2. test response with 2 curls"
+curl localhost:8082/recommend/1
+curl localhost:8082/recommend/2

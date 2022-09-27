@@ -1,0 +1,5 @@
+Model A average accuracy: 0.3601
+Model B average accuracy: 0.3702
+Statistic: 2.0284668817890044
+Pvalue: 0.15437626742162835
+The model performance differences are statistically insignificant.
